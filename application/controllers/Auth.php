@@ -25,10 +25,11 @@ class Auth extends Application {
 	
 	function login() {
 		$key = $_POST['userid'];
-		$password = password_hash($_POST['password'],PASSWORD_DEFAULT);
 		$user = $this->users->get($key);
+		$password_correct = password_verify($_POST['password'], $user->password);
+		
     
-		if ($password == (string) $user->password) {
+		if ($password_correct) {
 			$this->session->set_userdata('userID',$key);
 			$this->session->set_userdata('userName',$user->name);
 			$this->session->set_userdata('userRole',$user->role);
@@ -41,5 +42,4 @@ class Auth extends Application {
 		$this->session->sess_destroy();
 		redirect('/');
 	}
-
 }
